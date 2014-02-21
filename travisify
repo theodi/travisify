@@ -1,4 +1,20 @@
+#!/usr/bin/env ruby
 require 'dotenv'
+require 'optparse'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: travisify.rb [options]"
+
+  opts.on("--services x,y,z", Array, "Services to include (See http://docs.travis-ci.com/user/database-setup/ for a full list)") do |list|
+    options[:services] = list
+  end
+end.parse!
+
+if options[:services]
+  services = options[:services].map! { |s| "  - #{s}" }
+  services = "\nservices:\n#{services.join("\n")}"
+end
 
 config = <<EOF
 language: ruby
@@ -9,7 +25,7 @@ after_success:
 - ! '[ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && curl -v -X POST -d ''{"ref":"refs/tags/CURRENT","sha":"''$TRAVIS_COMMIT''"}''  --header "Content-Type:application/json" -u $GITHUB_USER:$GITHUB_PASSWORD "https://api.github.com/repos/$TRAVIS_REPO_SLUG/git/refs"'
 branches:
   except:
-  - CURRENT
+  - CURRENT#{services}
 notifications:
   irc:
     channels:
