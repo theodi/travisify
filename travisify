@@ -2,6 +2,11 @@
 require 'dotenv'
 require 'optparse'
 
+def rvm
+  rvm = `rvm current`
+  rvm.match(/ruby-([0-9.]+)/)[1] rescue "1.9.3"
+end
+
 options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: travisify.rb [options]"
@@ -19,7 +24,7 @@ end
 config = <<EOF
 language: ruby
 rvm:
-- 1.9.3
+- #{rvm}
 after_success:
 - ! '[ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && curl -v -X DELETE -u $GITHUB_USER:$GITHUB_PASSWORD "https://api.github.com/repos/$TRAVIS_REPO_SLUG/git/refs/tags/CURRENT"'
 - ! '[ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && curl -v -X POST -d ''{"ref":"refs/tags/CURRENT","sha":"''$TRAVIS_COMMIT''"}''  --header "Content-Type:application/json" -u $GITHUB_USER:$GITHUB_PASSWORD "https://api.github.com/repos/$TRAVIS_REPO_SLUG/git/refs"'
