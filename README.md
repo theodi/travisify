@@ -6,16 +6,23 @@ Creates a .travis.yml file, including CURRENT tagging. Also, automatically loads
 Usage
 -----
 
+    git clone git@github.com:theodi/travisify.git
+    cd travisify
+    gem install travisify.gem
     cd /path/to/your_project
-    /path/to/travisify
+    travisify
+    
+(We'll eventually get this published to Rubygems to make this process a bit more frictionless)
     
 You can also specify services to include (see http://docs.travis-ci.com/user/database-setup/ for a full list) as a comma seperated list like so:
 
-    /path/to/travisify --services x,y,z
+    travisify --services x,y,z
+    
+Travisify will also try and pick up the current ruby version from rvm, but you can specify additional ruby versions to test again like so:
 
-You can also create an alias for travisify by adding a line to your bash profile like so:
-
-    echo alias travisify="/path/to/travisify" >> ~/.bash_profile
+    travisify --rubies x,y,z
+    
+(See http://docs.travis-ci.com/user/ci-environment/#Ruby-versions-implementations for supported versions)
 
 License
 -------
