@@ -6,11 +6,17 @@ Creates a .travis.yml file, including CURRENT tagging. Also, automatically loads
 Usage
 -----
 
+### Installing individually
+
     git clone git@github.com:theodi/travisify.git
     cd travisify
     gem install travisify.gem
     cd /path/to/your_project
     travisify
+    
+### Adding to your project's Gemfile
+
+    gem 'travisify', github: 'theodi/travisify'
     
 (We'll eventually get this published to Rubygems to make this process a bit more frictionless)
     
